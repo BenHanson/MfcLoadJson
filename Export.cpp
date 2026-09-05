@@ -32,16 +32,24 @@ static void ExportContainer(const CTreeCtrl& tree, SData& data,
 	data.indent += indent_size;
 
 	if (type & json_type::Document)
+		// Start of JSON, so advance to children
 		data.hCurr = tree.GetChildItem(data.hCurr);
 	else
 	{
 		if (type & json_type::Key)
-			data.stack.push(item(tree.GetParentItem(data.hCurr), type));
-		else
-			data.stack.push(item(data.hCurr, type));
+		{
+			const auto hParent = tree.GetParentItem(data.hCurr);
 
-		if (!(type & json_type::Key))
+			// Record parent container
+			data.stack.push(item(hParent, type));
+		}
+		else
+		{
+			// Record anonymous container
+			data.stack.push(item(data.hCurr, type));
+			// Advance to children of anonymous container
 			data.hCurr = tree.GetChildItem(data.hCurr);
+		}
 	}
 }
 
@@ -51,21 +59,31 @@ static void ExportText(const CTreeCtrl& tree, SData& data,
 	const std::string text = static_cast<const char*>
 		(CT2A(tree.GetItemText(data.hCurr), CP_UTF8));
 
+	// Check the type for the value
 	if (tree.GetItemData(data.hCurr) & json_type::String)
-	{
+	{ 
+		// Strings need to be JSON conformant
 		const boost::json::string value(text);
 
 		data.json += boost::json::serialize(value);
 	}
 	else
+		// Otherwise record data as-is
 		data.json += text;
 
 	if (type & json_type::Key)
-		data.hCurr = tree.GetNextSiblingItem(tree.GetParentItem(data.hCurr));
+	{
+		const auto hParent = tree.GetParentItem(data.hCurr);
+
+		// Advance to next key (a scalar value is a child of its key)
+		data.hCurr = tree.GetNextSiblingItem(hParent);
+	}
 	else
+		// Advance to next value in an Array
 		data.hCurr = tree.GetNextSiblingItem(data.hCurr);
 
 	if (data.hCurr)
+		// A sibling exists
 		data.json += ',';
 
 	if (ws == whitespace::yes)
@@ -79,6 +97,7 @@ static void UnwindStack(const CTreeCtrl& tree, const HTREEITEM hItem,
 
 	while (!finished && !data.hCurr)
 	{
+		// Reset type to container whose children have been iterated over
 		type = data.stack.top()._type;
 		data.indent -= indent_size;
 
@@ -91,13 +110,16 @@ static void UnwindStack(const CTreeCtrl& tree, const HTREEITEM hItem,
 				std::string(data.indent, ' ') :
 				std::string());
 
+		// We have finished if we are back where we started
 		finished = data.stack.top()._tree_item == hItem;
 
 		if (!finished)
 		{
+			// Move to next sibling
 			data.hCurr = tree.GetNextSiblingItem(data.stack.top()._tree_item);
 
 			if (data.hCurr)
+				// A sibling exists
 				data.json += ',';
 		}
 
@@ -135,6 +157,11 @@ std::string Export(const HTREEITEM hItem, const CTreeCtrl& tree,
 			if (ws == whitespace::yes)
 				data.json += ' ';
 
+			// - A value for a key is always a child
+			// - A key also has a flag set for Object or Array
+			//   (there is no need to record the type at key level
+			//   for scalars)
+			// - Therefore always advance to the value but maintain the type
 			data.hCurr = tree.GetChildItem(data.hCurr);
 		}
 
