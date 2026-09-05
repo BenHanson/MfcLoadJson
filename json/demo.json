@@ -1,0 +1,12 @@
+{
+  "name": "example-project",
+  "version": "1.0.0",
+  "settings": {
+    "debug": true,
+    "parallel_jobs": 8
+  },
+  "dependencies": [
+    "boost-system",
+    "boost-filesystem"
+  ]
+}
