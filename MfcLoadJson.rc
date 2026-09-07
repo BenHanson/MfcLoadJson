@@ -21,6 +21,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -29,11 +30,11 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About LoadJSON"
+CAPTION "About MfcLoadJSON"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "LoadJSON, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "MfcLoadJSON, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2026",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
@@ -45,7 +46,7 @@ CAPTION "JSON Loader"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "",IDC_TREE,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_EDITLABELS | TVS_DISABLEDRAGDROP | TVS_INFOTIP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,7,306,162
-    DEFPUSHBUTTON   "Load",IDOK,157,179,50,14
+    PUSHBUTTON      "Load",IDC_BUTTON_LOAD,157,179,50,14
     PUSHBUTTON      "Export",IDC_BUTTON_EXPORT,210,179,50,14
     PUSHBUTTON      "Close",IDCANCEL,263,179,50,14
 END
@@ -74,11 +75,11 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "LoadJSON"
+            VALUE "FileDescription", "MfcLoadJSON"
             VALUE "FileVersion", "1.0.0.1"
-            VALUE "InternalName", "LoadJSON.exe"
+            VALUE "InternalName", "MfcLoadJSON.exe"
             VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
-            VALUE "OriginalFilename", "LoadJSON.exe"
+            VALUE "OriginalFilename", "MfcLoadJSON.exe"
             VALUE "ProductName", "TODO: <Product name>"
             VALUE "ProductVersion", "1.0.0.1"
         END
@@ -140,7 +141,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_ABOUTBOX            "&About LoadJSON..."
+    IDS_ABOUTBOX            "&About MfcLoadJSON..."
 END
 
 #endif    // English (United States) resources
@@ -152,6 +153,7 @@ END
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -183,7 +185,7 @@ BEGIN
     "\r\n"
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
-    "#include ""res\\LoadJSON.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\MfcLoadJSON.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""      // Standard components\r\n"
     "#if !defined(_AFXDLL)\r\n"
     "#include ""afxribbon.rc""   // MFC ribbon and control bar resources\r\n"
@@ -203,6 +205,19 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\MfcLoadJson.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR1 ACCELERATORS
+BEGIN
+    "C",            IDM_COPY,               VIRTKEY, CONTROL, NOINVERT
+    VK_F2,          IDM_EDIT,               VIRTKEY, NOINVERT
+    "E",            IDM_EXPORT,             VIRTKEY, CONTROL, NOINVERT
+END
 
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////

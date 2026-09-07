@@ -12,10 +12,6 @@ BEGIN_MESSAGE_MAP(CMfcLoadJsonApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-CMfcLoadJsonApp::CMfcLoadJsonApp()
-{
-}
-
 // The one and only CMfcLoadJsonApp object
 CMfcLoadJsonApp theApp;
 

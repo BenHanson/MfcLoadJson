@@ -8,9 +8,9 @@
 class CMfcLoadJsonApp : public CWinApp
 {
 public:
-	CMfcLoadJsonApp();
+	CMfcLoadJsonApp() = default;
 
-	virtual BOOL InitInstance();
+	BOOL InitInstance() override;
 
 protected:
 	DECLARE_MESSAGE_MAP()

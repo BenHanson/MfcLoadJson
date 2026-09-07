@@ -90,21 +90,21 @@ bool handler::on_number_part(const std::string_view&,
 bool handler::on_int64(std::int64_t, const std::string_view& text,
     boost::system::error_code&)
 {
-    insert_scalar(text, json_type::Int64);
+    insert_scalar(text, json_type::Number);
     return true;
 }
 
 bool handler::on_uint64(std::uint64_t, const std::string_view& text,
     boost::system::error_code&)
 {
-    insert_scalar(text, json_type::UInt64);
+    insert_scalar(text, json_type::Number);
     return true;
 }
 
 bool handler::on_double(double, const std::string_view& text,
     boost::system::error_code&)
 {
-    insert_scalar(text, json_type::Double);
+    insert_scalar(text, json_type::Number);
     return true;
 }
 
