@@ -1,6 +1,6 @@
 # Load JSON into an MFC CTreeCtrl
 
-```
+```json
 {
   "name": "example-project",
   "version": "1.0.0",
