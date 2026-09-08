@@ -438,33 +438,37 @@ void CMfcLoadJsonDlg::OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CMfcLoadJsonDlg::OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)
 {
+	// If we accept the changes, we will set them ourselves
+	*pResult = FALSE;
+
 	if (const auto pInfo = std::bit_cast<TV_DISPINFO*>(pNMHDR);
 		pInfo->item.pszText)
 	{
 		if (!ValidateText(pInfo->item.hItem, pInfo->item.pszText))
 		{
-			*pResult = FALSE;
 			return;
 		}
 
 		if (m_TreeCtrl.GetItemData(pInfo->item.hItem) & json_type::String)
 		{
-			// Unescape JSON string
-			CString strText;
-			CString strUnescaped;
-
 			if (auto edit = m_TreeCtrl.GetEditControl(); edit)
 			{
+				// Unescape JSON string
+				CString strText;
+				CString strUnescaped;
+
 				edit->GetWindowText(strText);
 				strUnescaped = Unescape(strText);
 				m_TreeCtrl.SetItemText(pInfo->item.hItem, strUnescaped);
 			}
-
-			*pResult = TRUE;
+			else
+			{
+				// Shouldn't happen
+				ASSERT(FALSE);
+				*pResult = TRUE;
+			}
 		}
 	}
-
-	*pResult = FALSE;
 }
 
 LRESULT CMfcLoadJsonDlg::OnPopulateData(WPARAM, LPARAM lParam)
