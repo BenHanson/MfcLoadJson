@@ -7,7 +7,7 @@ MfcLoadJson allows you to:
 
 ## Building
 
-- Make sure you have downloaded boost
+- Make sure you have downloaded <a href="https://boost.org">boost</a>
 - Build `boost::json` if you haven't already
   - `.\b2 --with-json`
 - Set environment variable BOOST_ROOT to point to your boost path
