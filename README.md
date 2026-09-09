@@ -1,4 +1,19 @@
-# Load JSON into an MFC CTreeCtrl
+# MfcLoadJson
+
+MfcLoadJson allows you to:
+- Load JSON into an MFC `CTreeCtrl`
+- Edit the values in-place in the control
+- Export the control back out to a `.json` file
+
+## Building
+
+- Make sure you have downloaded boost
+- Build `boost::json` if you haven't already
+  - `.\b2 --with-json`
+- Set environment variable BOOST_ROOT to point to your boost path
+- Load the `.slnx` file into Visual Studio
+
+# Example
 
 ```json
 {
@@ -18,11 +33,3 @@
 is shown as:
 
 ![alt text](./png/MfcLoadJson.png "Screenshot")
-
-## Building
-
-- Make sure you have downloaded boost
-- Build `boost::json` if you haven't already
-  - `.\b2 --with-json`
-- Set environment variable BOOST_ROOT to point to your boost path
-- Load the `.slnx` file into Visual Studio
