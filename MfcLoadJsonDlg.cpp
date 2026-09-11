@@ -232,6 +232,24 @@ CString CMfcLoadJsonDlg::Unescape(const CString& strText)
 	return strUnescaped;
 }
 
+void CMfcLoadJsonDlg::DoExport(const HTREEITEM hItem)
+{
+	CFileDialog Dlg(FALSE, L"json", nullptr,
+		OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, szJsonFilter);
+
+	if (Dlg.DoModal() == IDOK)
+	{
+		std::string json = Export(hItem, m_TreeCtrl, whitespace::yes);
+		std::ofstream os;
+
+		// Enable exceptions on error.
+		os.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
+		os.open(Dlg.GetPathName(), std::ios_base::out | std::ios_base::trunc);
+		os << json;
+		os.close();
+	}
+}
+
 BEGIN_MESSAGE_MAP(CMfcLoadJsonDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
@@ -240,7 +258,7 @@ BEGIN_MESSAGE_MAP(CMfcLoadJsonDlg, CDialogEx)
 	ON_COMMAND(IDM_EDIT, OnEdit)
 	ON_COMMAND(IDM_EXPORT, OnExport)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD, OnLoad)
-	ON_BN_CLICKED(IDC_BUTTON_EXPORT, OnExport)
+	ON_BN_CLICKED(IDC_BUTTON_EXPORT, OnExportAll)
 	ON_NOTIFY(NM_RCLICK, IDC_TREE, OnRClickTree)
 	ON_NOTIFY(TVN_BEGINLABELEDIT, IDC_TREE, OnBeginLabelEdit)
 	ON_NOTIFY(TVN_ENDLABELEDIT, IDC_TREE, OnEndLabelEdit)
@@ -580,21 +598,14 @@ void CMfcLoadJsonDlg::OnLoad()
 
 void CMfcLoadJsonDlg::OnExport()
 {
-	CFileDialog Dlg(FALSE, L"json", nullptr,
-		OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST, szJsonFilter);
+	const HTREEITEM hItem = m_TreeCtrl.GetSelectedItem() ?
+		m_TreeCtrl.GetSelectedItem() :
+		m_TreeCtrl.GetRootItem();
 
-	if (Dlg.DoModal() == IDOK)
-	{
-		const HTREEITEM hItem = m_TreeCtrl.GetSelectedItem() ?
-			m_TreeCtrl.GetSelectedItem() :
-			m_TreeCtrl.GetRootItem();
-		std::string json = Export(hItem, m_TreeCtrl, whitespace::yes);
-		std::ofstream os;
+	DoExport(hItem);
+}
 
-		// Enable exceptions on error.
-		os.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
-		os.open(Dlg.GetPathName(), std::ios_base::out | std::ios_base::trunc);
-		os << json;
-		os.close();
-	}
+void CMfcLoadJsonDlg::OnExportAll()
+{
+	DoExport(m_TreeCtrl.GetRootItem());
 }

@@ -26,6 +26,7 @@ protected:
 	void LoadJSON(const std::string& json);
 	bool ValidateText(const HTREEITEM hItem, const wchar_t* pszText);
 	CString Unescape(const CString& strText);
+	void DoExport(const HTREEITEM hItem);
 
 	// Generated message map functions
 	BOOL OnInitDialog() override;
@@ -43,6 +44,7 @@ protected:
 	afx_msg void OnEdit();
 	afx_msg void OnLoad();
 	afx_msg void OnExport();
+	afx_msg void OnExportAll();
 	DECLARE_MESSAGE_MAP()
 
 private:
