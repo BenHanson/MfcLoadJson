@@ -34,6 +34,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg void OnRClickTree(NMHDR*, LRESULT*);
 	afx_msg void OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnEndLabelEdit(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg LRESULT OnPopulateData(WPARAM, LPARAM lParam);
@@ -46,6 +47,9 @@ protected:
 
 private:
 	HACCEL m_hAccel{};
+	CBitmap m_bmEdit;
+	CBitmap m_bmExport;
+	CBitmap m_bmCopy;
 	HICON m_hIcon{};
 	CTreeCtrl m_TreeCtrl;
 	CInPlaceEditDlg m_InPlaceDlg;

@@ -241,6 +241,7 @@ BEGIN_MESSAGE_MAP(CMfcLoadJsonDlg, CDialogEx)
 	ON_COMMAND(IDM_EXPORT, OnExport)
 	ON_BN_CLICKED(IDC_BUTTON_LOAD, OnLoad)
 	ON_BN_CLICKED(IDC_BUTTON_EXPORT, OnExport)
+	ON_NOTIFY(NM_RCLICK, IDC_TREE, OnRClickTree)
 	ON_NOTIFY(TVN_BEGINLABELEDIT, IDC_TREE, OnBeginLabelEdit)
 	ON_NOTIFY(TVN_ENDLABELEDIT, IDC_TREE, OnEndLabelEdit)
 	ON_MESSAGE(WM_POPULATE_DATA, OnPopulateData)
@@ -278,6 +279,16 @@ BOOL CMfcLoadJsonDlg::OnInitDialog()
 
 	m_hAccel = LoadAccelerators(AfxGetResourceHandle(),
 		MAKEINTRESOURCE(IDR_ACCELERATOR1));
+
+	COLORMAP cm[] =
+	{
+		{RGB(0xfe, 0x05, 0xfe), ::GetSysColor(COLOR_MENU)}
+	};
+
+	m_bmEdit.LoadMappedBitmap(IDB_EDIT, 0, cm, sizeof(cm) / sizeof(COLORMAP));
+	m_bmExport.LoadMappedBitmap(IDB_EXPORT, 0, cm, sizeof(cm) / sizeof(COLORMAP));
+	m_bmCopy.LoadMappedBitmap(IDB_COPY, 0, cm, sizeof(cm) / sizeof(COLORMAP));
+
 	m_TreeCtrl.SubclassDlgItem(IDC_TREE, this);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -379,6 +390,44 @@ void CMfcLoadJsonDlg::OnPaint()
 HCURSOR CMfcLoadJsonDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+void CMfcLoadJsonDlg::OnRClickTree(NMHDR*, LRESULT* pResult)
+{
+	// We have to do this instead of calling GetSelectedItem()
+	// in order to get the correct selection
+	CPoint pt;
+	GetCursorPos(&pt); m_TreeCtrl.ScreenToClient(&pt);
+	UINT unFlags = 0;
+	const HTREEITEM hItem = m_TreeCtrl.HitTest(pt, &unFlags);
+
+	if (!hItem)
+		return;
+
+	const DWORD_PTR dwFlags = m_TreeCtrl.GetItemData(hItem);
+	CMenu menu;
+
+	if (hItem)
+		m_TreeCtrl.SelectItem(hItem);
+
+	menu.CreatePopupMenu();
+
+	menu.AppendMenu(MF_STRING | ((dwFlags & json_type::Scalar) ?
+		MF_ENABLED :
+		MF_DISABLED),
+		IDM_EDIT, L"Edit\tF2");
+	menu.SetMenuItemBitmaps(IDM_EDIT, MF_BYCOMMAND, &m_bmEdit, nullptr);
+	menu.AppendMenu(MF_STRING, IDM_EXPORT, L"Export\tCtrl+E");
+	menu.SetMenuItemBitmaps(IDM_EXPORT, MF_BYCOMMAND, &m_bmExport, nullptr);
+	menu.AppendMenu(MF_SEPARATOR);
+	menu.AppendMenu(MF_STRING, IDM_COPY, L"Copy\tCtrl+C");
+	menu.SetMenuItemBitmaps(IDM_COPY, MF_BYCOMMAND, &m_bmCopy, nullptr);
+
+	const DWORD pos = GetMessagePos();
+	const CPoint clickPos(GET_X_LPARAM(pos), GET_Y_LPARAM(pos));
+
+	menu.TrackPopupMenu(TPM_CENTERALIGN | TPM_RIGHTBUTTON,
+		clickPos.x, clickPos.y, this, nullptr);
 }
 
 void CMfcLoadJsonDlg::OnBeginLabelEdit(NMHDR* pNMHDR, LRESULT* pResult)

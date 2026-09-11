@@ -9,7 +9,8 @@ enum json_type
     Null = 1 << 4,
     Object = 1 << 5,
     Number = 1 << 6,
-    String = 1 << 7
+    String = 1 << 7,
+    Scalar = Boolean | Number | String
 };
 
 enum

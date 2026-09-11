@@ -7,7 +7,10 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_MFCLOADJSON_DIALOG          102
 #define IDR_MAINFRAME                   128
-#define IDR_ACCELERATOR1                131
+#define IDR_ACCELERATOR1                130
+#define IDB_EDIT                        131
+#define IDB_EXPORT                      132
+#define IDB_COPY                        133
 #define IDC_TREE                        1000
 #define IDC_BUTTON_LOAD                 1001
 #define IDC_BUTTON_EXPORT               1002
@@ -20,8 +23,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        132
-#define _APS_NEXT_COMMAND_VALUE         32773
+#define _APS_NEXT_RESOURCE_VALUE        134
+#define _APS_NEXT_COMMAND_VALUE         32772
 #define _APS_NEXT_CONTROL_VALUE         1006
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

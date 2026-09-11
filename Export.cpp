@@ -53,8 +53,8 @@ static void ExportContainer(const CTreeCtrl& tree, SData& data,
 	}
 }
 
-static void ExportText(const CTreeCtrl& tree, SData& data,
-	const json_type type, const whitespace ws)
+static void ExportText(const CTreeCtrl& tree, const HTREEITEM hItem,
+	SData& data, const json_type type, const whitespace ws)
 {
 	const std::string text = static_cast<const char*>
 		(CT2A(tree.GetItemText(data.hCurr), CP_UTF8));
@@ -71,12 +71,23 @@ static void ExportText(const CTreeCtrl& tree, SData& data,
 		// Otherwise record data as-is
 		data.json += text;
 
-	if (type & json_type::Key)
+	if (data.hCurr == hItem)
+	{
+		data.hCurr = nullptr;
+		return;
+	}
+	else if (type & json_type::Key)
 	{
 		const auto hParent = tree.GetParentItem(data.hCurr);
 
-		// Advance to next key (a scalar value is a child of its key)
-		data.hCurr = tree.GetNextSiblingItem(hParent);
+		if (hParent == hItem)
+		{
+			data.hCurr = nullptr;
+			return;
+		}
+		else
+			// Advance to next key (a scalar value is a child of its key)
+			data.hCurr = tree.GetNextSiblingItem(hParent);
 	}
 	else
 		// Advance to next value in an Array
@@ -176,9 +187,7 @@ std::string Export(const HTREEITEM hItem, const CTreeCtrl& tree,
 			ExportContainer(tree, data, type, ws);
 		}
 		else
-		{ 
-			ExportText(tree, data, type, ws);
-		}
+			ExportText(tree, hItem, data, type, ws);
 
 		UnwindStack(tree, hItem, data, type, ws);
 	}
